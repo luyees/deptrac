@@ -11,33 +11,33 @@ class AstInherit
     private const TYPE_USES = 3;
 
     private $className;
-    private $line;
+    private $fileAppearance;
     private $type;
 
     /** @var AstInherit[] */
     private $path;
 
-    private function __construct(string $className, int $line, int $type)
+    private function __construct(string $className, FileAppearance $fileAppearance, int $type)
     {
         $this->className = $className;
-        $this->line = $line;
+        $this->fileAppearance = $fileAppearance;
         $this->type = $type;
         $this->path = [];
     }
 
-    public static function newExtends(string $className, int $line): self
+    public static function newExtends(string $className, FileAppearance $fileAppearance): self
     {
-        return new self($className, $line, static::TYPE_EXTENDS);
+        return new self($className, $fileAppearance, static::TYPE_EXTENDS);
     }
 
-    public static function newImplements(string $className, int $line): self
+    public static function newImplements(string $className, FileAppearance $fileAppearance): self
     {
-        return new self($className, $line, static::TYPE_IMPLEMENTS);
+        return new self($className, $fileAppearance, static::TYPE_IMPLEMENTS);
     }
 
-    public static function newTraitUse(string $className, int $line): self
+    public static function newTraitUse(string $className, FileAppearance $fileAppearance): self
     {
-        return new self($className, $line, static::TYPE_USES);
+        return new self($className, $fileAppearance, static::TYPE_USES);
     }
 
     public function __toString(): string
@@ -56,7 +56,7 @@ class AstInherit
                 $type = 'Unknown';
         }
 
-        $description = "{$this->className}::{$this->line} ($type)";
+        $description = "{$this->className}::{$this->fileAppearance->getLine()} ($type)";
 
         if (0 === count($this->path)) {
             return $description;
@@ -75,9 +75,9 @@ class AstInherit
         return $this->className;
     }
 
-    public function getLine(): int
+    public function getFileAppearance(): FileAppearance
     {
-        return $this->line;
+        return $this->fileAppearance;
     }
 
     public function getType(): int

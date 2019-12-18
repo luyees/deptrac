@@ -94,7 +94,7 @@ final class ConsoleOutputFormatter implements OutputFormatterInterface
                 $dependency->getClassB(),
                 $rule->getLayerA(),
                 $rule->getLayerB(),
-                $this->formatPath($dependency->getPath(), $dependency)
+                $this->formatPath($dependency->getInheritPath(), $dependency)
             )
         );
     }
@@ -111,7 +111,7 @@ final class ConsoleOutputFormatter implements OutputFormatterInterface
                 '%s<info>%s</info>::%s must not depend on <info>%s</info> (%s on %s)',
                 $rule instanceof SkippedViolation ? '[SKIPPED] ' : '',
                 $dependency->getClassA(),
-                $dependency->getClassALine(),
+                $dependency->getFileAppearance()->getLine(),
                 $dependency->getClassB(),
                 $rule->getLayerA(),
                 $rule->getLayerB()
@@ -123,14 +123,14 @@ final class ConsoleOutputFormatter implements OutputFormatterInterface
     {
         $buffer = [];
         foreach ($astInherit->getPath() as $p) {
-            array_unshift($buffer, sprintf("\t%s::%d", $p->getClassName(), $p->getLine()));
+            array_unshift($buffer, sprintf("\t%s::%d", $p->getClassName(), $p->getFileAppearance()->getLine()));
         }
 
-        $buffer[] = sprintf("\t%s::%d", $astInherit->getClassName(), $astInherit->getLine());
+        $buffer[] = sprintf("\t%s::%d", $astInherit->getClassName(), $astInherit->getFileAppearance()->getLine());
         $buffer[] = sprintf(
             "\t%s::%d",
             $dependency->getOriginalDependency()->getClassB(),
-            $dependency->getOriginalDependency()->getClassALine()
+            $dependency->getOriginalDependency()->getFileAppearance()->getLine()
         );
 
         return implode(" -> \n", $buffer);

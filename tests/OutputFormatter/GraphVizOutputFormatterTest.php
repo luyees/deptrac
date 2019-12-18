@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tests\SensioLabs\Deptrac\OutputFormatter;
 
 use PHPUnit\Framework\TestCase;
+use SensioLabs\Deptrac\AstRunner\AstMap\AstFileReference;
+use SensioLabs\Deptrac\AstRunner\AstMap\FileAppearance;
 use SensioLabs\Deptrac\Dependency\Dependency;
 use SensioLabs\Deptrac\OutputFormatter\GraphVizOutputFormatter;
 use SensioLabs\Deptrac\OutputFormatter\OutputFormatterInput;
@@ -26,10 +28,10 @@ class GraphVizOutputFormatterTest extends TestCase
         $dotFile = __DIR__.'/data/graphviz.dot';
 
         $context = new Context([
-            new Violation(new Dependency('ClassA', 0, 'ClassB'), 'LayerA', 'LayerB'),
-            new Violation(new Dependency('ClassAB', 1, 'ClassBA'), 'LayerA', 'LayerB'),
-            new Allowed(new Dependency('ClassA', 0, 'ClassC'), 'LayerA', 'LayerC'),
-            new Uncovered(new Dependency('ClassA', 0, 'ClassD'), 'LayerC'),
+            new Violation(new Dependency('ClassA', 'ClassB', new FileAppearance(new AstFileReference('classA.php'), 0)), 'LayerA', 'LayerB'),
+            new Violation(new Dependency('ClassAB', 'ClassBA', new FileAppearance(new AstFileReference('classAB.php'), 1)), 'LayerA', 'LayerB'),
+            new Allowed(new Dependency('ClassA', 'ClassC', new FileAppearance(new AstFileReference('classA.php'), 0)), 'LayerA', 'LayerC'),
+            new Uncovered(new Dependency('ClassA', 'ClassD', new FileAppearance(new AstFileReference('classA.php'), 0)), 'LayerC'),
         ]);
 
         $output = new BufferedOutput();
